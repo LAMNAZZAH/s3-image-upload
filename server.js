@@ -1,13 +1,21 @@
 const express = require('express');
 const fileUpload = require('express-fileupload');
 const path = require('path');
+const cors = require('cors');
 
 const app = express()
 
+const corsOption = {
+    origin: ['http://localhost:3000'],
+}
+
+app.use(cors(corsOption));
 
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
 app.use(fileUpload());
+
+
 
 app.get('/uploads/:file', (req, res, next) => {
     res.sendFile(path.join(__dirname, req.path))
@@ -16,7 +24,10 @@ app.get('/uploads/:file', (req, res, next) => {
 
 // Upload Api EndP 
 app.post('/upload', (req, res, next) => {
-    if(req.files === null) res.status(400).json({msg: 'Missing File'})
+    if(req.files === null) {
+        res.status(400).json({msg: 'Missing File'});
+    } 
+        
     const file = req.files.file; 
 
     file.mv(`${__dirname}/uploads/${file.name}`, err => {

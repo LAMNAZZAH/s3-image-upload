@@ -1,10 +1,12 @@
 import React, { Fragment, useState } from "react";
+import Message from './Message'
 import axios from 'axios';
 
 const FileUpload = () => {
   const [file, setFile] = useState("");
   const [filename, setFilename] = useState("Choose file");
   const [uploadedFile, setUploadedFile] = useState({}); 
+  const [message, setMessage] = useState()
 
   const fileChange = (e) => {
       e.preventDefault(); 
@@ -20,7 +22,7 @@ const FileUpload = () => {
       formData.append('file', file);
 
       try {
-        const res = await axios.post('/upload', formData, {
+        const res = await axios.post('http://localhost:5000/upload', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
@@ -28,18 +30,19 @@ const FileUpload = () => {
 
         const { fileName, filePath } = res.data; 
         setUploadedFile({ fileName, filePath });
-        console.log(`fileName: ${fileName}, filePath: ${filePath}`);
+        setMessage(`Uploaded file: fileName: ${fileName}, filePath: ${filePath}`);
 
     } catch(err) {
 
-        if(err.response.status === 500) console.log('Internal error');
-        else console.log(err.response.data);
+        if(err.response.status === 500) setMessage('Internal error');
+        else setMessage(`${err.response.data.msg}`);
     }
   }
 
 
   return (
     <Fragment>
+        { message ? <Message msg={message} /> : null }
       <form onSubmit={onSubmit}>
         <div className="custom-file">
           <input type="file" className="custom-file-input" id="customFile" onChange={(e) => fileChange(e)}/>
