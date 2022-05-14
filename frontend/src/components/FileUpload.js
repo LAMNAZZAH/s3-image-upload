@@ -1,19 +1,46 @@
 import React, { Fragment, useState } from "react";
+import axios from 'axios';
 
 const FileUpload = () => {
   const [file, setFile] = useState("");
   const [filename, setFilename] = useState("Choose file");
+  //const [uploadedFile, setUploadedFile] = useState({}); 
 
   const fileChange = (e) => {
       e.preventDefault(); 
-      setFile(e.tagret.files[0])
+      console.log(e.target.files[0]);
+      setFile(e.target.files[0])
+      console.log(`file: ${filename}`);
       setFilename(e.target.files[0].name);
+  }
+
+  const onSubmit = async (e) => {
+      e.preventDefault(); 
+      const formData = new FormData(); 
+      formData.append('file', file);
+
+      try {
+        const res = await axios.post('/upload', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+
+        const { fileName, filePath } = res.data; 
+
+        console.log(`fileName: ${fileName}, filePath: ${filePath}`);
+
+    } catch(err) {
+
+        if(err.response.status === 500) console.log('Internal error');
+        else console.log(err.response.data);
+    }
   }
 
 
   return (
     <Fragment>
-      <form action="">
+      <form onSubmit={onSubmit}>
         <div className="custom-file">
           <input type="file" className="custom-file-input" id="customFile" onChange={(e) => fileChange(e)}/>
           <label className="custom-file-label" htmlFor="customFile">
