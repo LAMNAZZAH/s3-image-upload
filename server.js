@@ -3,11 +3,16 @@ const fileUpload = require('express-fileupload');
 const path = require('path');
 const cors = require('cors');
 
+require('dotenv').config()
+
 const app = express()
 
 const corsOption = {
     origin: ['http://localhost:3000'],
 }
+
+const port = process.env.PORT || 5000;
+
 
 app.use(cors(corsOption));
 
@@ -41,7 +46,7 @@ app.post('/upload', (req, res, next) => {
 })
  
 
-app.listen(5000, () => {
-    console.log(`[*] server running on PORT 5000`);
+app.listen(port, () => {
+    console.log(`[*] server running on PORT ${port}`);
 })
 

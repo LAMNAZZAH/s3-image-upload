@@ -11,8 +11,9 @@ const Progress = ({ percentage }) => {
         aria-valuemin="0"
         aria-valuemax="100"
         style={{ width: `${percentage}%` }}
-      />
+      >
       %{percentage}
+      </div>
     </div>
   );
 };
