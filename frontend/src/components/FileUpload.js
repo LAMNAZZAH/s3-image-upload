@@ -4,7 +4,7 @@ import axios from 'axios';
 const FileUpload = () => {
   const [file, setFile] = useState("");
   const [filename, setFilename] = useState("Choose file");
-  //const [uploadedFile, setUploadedFile] = useState({}); 
+  const [uploadedFile, setUploadedFile] = useState({}); 
 
   const fileChange = (e) => {
       e.preventDefault(); 
@@ -27,7 +27,7 @@ const FileUpload = () => {
         });
 
         const { fileName, filePath } = res.data; 
-
+        setUploadedFile({ fileName, filePath });
         console.log(`fileName: ${fileName}, filePath: ${filePath}`);
 
     } catch(err) {
@@ -53,6 +53,14 @@ const FileUpload = () => {
           className="btn btn-primary btn-block mt-4"
         />
       </form>
+      { uploadedFile ? <div className="row mt-5">
+          <div className="col-md-6 m-auto">
+              <h3 className="text-center">
+                  {uploadedFile.fileName}
+              </h3>
+              <img style={{width: '100%'}} src={`http://localhost:5000${uploadedFile.filePath}`} alt="" />
+          </div>
+      </div> : <></> }
     </Fragment>
   );
 };

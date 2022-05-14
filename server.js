@@ -1,5 +1,6 @@
 const express = require('express');
 const fileUpload = require('express-fileupload');
+const path = require('path');
 
 const app = express()
 
@@ -7,6 +8,11 @@ const app = express()
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
 app.use(fileUpload());
+
+app.get('/uploads/:file', (req, res, next) => {
+    res.sendFile(path.join(__dirname, req.path))
+    console.log(req.path);
+})
 
 // Upload Api EndP 
 app.post('/upload', (req, res, next) => {
